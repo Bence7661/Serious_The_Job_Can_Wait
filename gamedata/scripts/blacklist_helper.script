@@ -23,6 +23,22 @@ local psy_immune_factions = {
 	["zombied"] = true
 }
 
+local guide_before_north = {
+    l01_escape			= {"k00_marsh",		"k01_darkscape",	"l02_garbage"},
+    k00_marsh			= {"l01_escape",	'l03_agroprom'},
+    k01_darkscape		= {"l01_escape",	"l04_darkvalley"},
+    l02_garbage			= {"l01_escape",	"l03_agroprom",		"l04_darkvalley",		"l05_bar",'l06_rostok'},
+    l03_agroprom		= {"l02_garbage",	'l08_yantar',		'k00_marsh'},
+    l04_darkvalley		= {"l02_garbage",	"k01_darkscape",	'k02_trucks_cemetery'},
+    l05_bar				= {"l02_garbage",	"l06_rostok",		"l07_military",			'k02_trucks_cemetery'},
+    l06_rostok			= {"l08_yantar",	"l05_bar",			'l02_garbage'},
+    l08_yantar			= {"l06_rostok",	"l09_deadcity",		'l03_agroprom'},
+    l09_deadcity		= {"l08_yantar",	'l07_military',},
+    k02_trucks_cemetery	= {'l04_darkvalley','l05_bar',			'l07_military'},
+    l07_military		= {"l05_bar",		"l09_deadcity",		'k02_trucks_cemetery'},
+    y04_pole			= {"l01_escape",	'l04_darkvalley'}
+}
+
 function ShouldBlacklistNorth()
 	local playerFaction = get_actor_true_community()
 
@@ -49,4 +65,8 @@ function CreatePreScorcherBlacklist(blacklistedMaps)
     end
 
     return result
+end
+
+function GetGuideDestinationsNorth()
+    return guide_before_north
 end
