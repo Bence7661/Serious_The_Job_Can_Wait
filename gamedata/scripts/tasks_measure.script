@@ -223,109 +223,17 @@ xr_conditions.validate_measure_task = function(actor,npc,p)
 		end
 	end
 	
-
-
-
-
-
---[[
+	--[[
 	SERIOUS NO NORTH TASKS BEFORE BS
---]]
-local psy_extra_levels = {
-	["l10_limansk"] = true,
-    ["l10_red_forest"] = true,
-    ["l10_radar"] = false,
-    ["zaton"] = true,
-    ["jupiter"] = true,
-    ["pripyat"] = true,
-    ["l11_hospital"] = true,
-    ["l11_pripyat"] = true,
-    ["l12_stancia"] = true,
-    ["l12_stancia_2"] = true,
-    ["l13_generators"] = true,
-    ["jupiter_underground"] = true,
-    ["l12u_sarcofag"] = true,
-    ["l12u_control_monolith"] = true,
-    ["l13u_warlab"] = true,
-}
+	--]]
+	local preScorcherBlacklist = {}
 
-local psy_immune_factions = {
-	["monolith"] = true,
-	["isg"] = true,
-	["greh"] = true,
-	["zombied"] = true
-}
-	if 
-	(has_alife_info("yan_labx16_switcher_primary_off") and has_alife_info("bar_deactivate_radar_done")) 
-	or 
-	(psy_immune_factions[faction] or has_alife_info("story_mode_disabled")) then
-	
-
-		blacklisted_maps = { -- List of maps to skip in scans
-		-- North
-		["l13_generators"]        = true,
-		["l12_stancia_2"]         = true,
-		["l12_stancia"]           = true,
-		["l11_pripyat"]           = true,
-		["l10_radar"]             = true,
-		["l11_hospital"]          = true,
-		
-		-- Underground
-		["jupiter_underground"]   = true,
-		["labx8"]                 = true,
-		["l03u_agr_underground"]  = true,
-		["l04u_labx18"]           = true,
-		["l08u_brainlab"]         = true,
-		["l10u_bunker"]           = true,
-		["l12u_control_monolith"] = true,
-		["l12u_sarcofag"]         = true,
-		["l13u_warlab"]           = true,
-		
-		["fake_start"]            = true,
-		
-		["l01_escape"]            = true,
-		["l05_bar"]               = true,
-		["l02_garbage"]           = true,
-	}
-	else
-		blacklisted_maps = { -- List of maps to skip in scans
-		-- North
-		-- Underground
-		["labx8"]                 = true,
-		["l03u_agr_underground"]  = true,
-		["l04u_labx18"]           = true,
-		["l08u_brainlab"]         = true,
-		["l10u_bunker"]           = true,
-		["l10_limansk"] = true,
-		["l10_red_forest"] = true,
-		["l10_radar"] = false,
-		["zaton"] = true,
-		["jupiter"] = true,
-		["pripyat"] = true,
-		["l11_hospital"] = true,
-		["l11_pripyat"] = true,
-		["l12_stancia"] = true,
-		["l12_stancia_2"] = true,
-		["l13_generators"] = true,
-		["jupiter_underground"] = true,
-		["l12u_sarcofag"] = true,
-		["l12u_control_monolith"] = true,
-		["l13u_warlab"] = true,
-		["fake_start"]            = true
-	
-	}
+	if blacklist_helper.ShouldBlacklistNorth() then
+		preScorcherBlacklist = blacklist_helper.CreatePreScorcherBlacklist(blacklisted_maps)
 	end
---[[
+	--[[
 	SERIOUS NO NORTH TASKS BEFORE BS
---]]
-
-
-
-
-
-
-
-
+	--]]
 
 	local targets = {}
 	local actor_level = level.name()
@@ -336,7 +244,7 @@ local psy_immune_factions = {
 		local se_obj = sim:object(i)
 		if se_obj and ano_tbl[se_obj:section_name()] then
 			local lvl_name = sim:level_name( gg:vertex(se_obj.m_game_vertex_id):level_id())
-			if (not blacklisted_maps[lvl_name]) -- not in a blacklisted level
+			if (not blacklisted_maps[lvl_name] and not preScorcherBlacklist[lvl_name]) -- not in a blacklisted level
 			and (not (dyn_anomalies[lvl_name] and dyn_anomalies[lvl_name][i] ~= nil)) -- not a dynamic anomaly
 			then
 				local is_online = se_obj.online

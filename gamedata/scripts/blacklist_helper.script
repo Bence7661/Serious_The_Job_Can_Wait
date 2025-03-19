@@ -1,0 +1,52 @@
+local northernMaps = {
+	["l10_limansk"] = true,
+    ["l10_red_forest"] = true,
+    ["l10_radar"] = false,
+    ["zaton"] = true,
+    ["jupiter"] = true,
+    ["pripyat"] = true,
+    ["l11_hospital"] = true,
+    ["l11_pripyat"] = true,
+    ["l12_stancia"] = true,
+    ["l12_stancia_2"] = true,
+    ["l13_generators"] = true,
+    ["jupiter_underground"] = true,
+    ["l12u_sarcofag"] = true,
+    ["l12u_control_monolith"] = true,
+    ["l13u_warlab"] = true,
+}
+
+local psy_immune_factions = {
+	["monolith"] = true,
+	["isg"] = true,
+	["greh"] = true,
+	["zombied"] = true
+}
+
+function ShouldBlacklistNorth()
+	local playerFaction = get_actor_true_community()
+
+	if 
+		(has_alife_info("yan_labx16_switcher_primary_off") and has_alife_info("bar_deactivate_radar_done")) 
+		or 
+		(psy_immune_factions[playerFaction] or has_alife_info("story_mode_disabled"))
+	then
+		return false
+	end
+
+	return true
+end
+
+function CreatePreScorcherBlacklist(blacklistedMaps)
+    local result = {}
+
+    for key, value in pairs(blacklistedMaps) do
+        result[key] = value
+    end
+
+    for key, value in pairs(northernMaps) do
+        result[key] = value
+    end
+
+    return result
+end

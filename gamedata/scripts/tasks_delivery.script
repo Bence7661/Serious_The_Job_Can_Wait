@@ -67,78 +67,19 @@ xr_effects.on_init_delivery_task = function(actor,npc,p)
 	if delivery_cache[var] and delivery_cache[var][task_giver_id] then
 		target_id = delivery_cache[var][task_giver_id]
 	else
-		local blacklisted_maps = {}
-		
-
-
+		local blacklisted_maps = xr_effects.blacklisted_maps
 
 		--[[
-			SERIOUS NO NORTH TASKS BEFORE BS
+		SERIOUS NO NORTH TASKS BEFORE BS
 		--]]
-		local psy_extra_levels = {
-			["l10_limansk"] = true,
-			["l10_red_forest"] = true,
-			["l10_radar"] = false,
-			["zaton"] = true,
-			["jupiter"] = true,
-			["pripyat"] = true,
-			["l11_hospital"] = true,
-			["l11_pripyat"] = true,
-			["l12_stancia"] = true,
-			["l12_stancia_2"] = true,
-			["l13_generators"] = true,
-			["jupiter_underground"] = true,
-			["l12u_sarcofag"] = true,
-			["l12u_control_monolith"] = true,
-			["l13u_warlab"] = true,
-		}
+		local preScorcherBlacklist = {}
 
-		local psy_immune_factions = {
-			["monolith"] = true,
-			["isg"] = true,
-			["greh"] = true,
-			["zombied"] = true
-		}
-			if 
-			(has_alife_info("yan_labx16_switcher_primary_off") and has_alife_info("bar_deactivate_radar_done")) 
-			or 
-			(psy_immune_factions[faction] or has_alife_info("story_mode_disabled")) then
-			
-
-				blacklisted_maps = xr_effects.blacklisted_maps
-			else
-				blacklisted_maps = { -- List of maps to skip in scans
-				-- North
-				-- Underground
-				["labx8"]                 = true,
-				["l03u_agr_underground"]  = true,
-				["l04u_labx18"]           = true,
-				["l08u_brainlab"]         = true,
-				["l10u_bunker"]           = true,
-				["l10_limansk"] = true,
-				["l10_red_forest"] = true,
-				["l10_radar"] = false,
-				["zaton"] = true,
-				["jupiter"] = true,
-				["pripyat"] = true,
-				["l11_hospital"] = true,
-				["l11_pripyat"] = true,
-				["l12_stancia"] = true,
-				["l12_stancia_2"] = true,
-				["l13_generators"] = true,
-				["jupiter_underground"] = true,
-				["l12u_sarcofag"] = true,
-				["l12u_control_monolith"] = true,
-				["l13u_warlab"] = true,
-				["fake_start"]            = true
-			
-			}
-			end
+		if blacklist_helper.ShouldBlacklistNorth() then
+			preScorcherBlacklist = blacklist_helper.CreatePreScorcherBlacklist(blacklisted_maps)
+		end
 		--[[
-			SERIOUS NO NORTH TASKS BEFORE BS
+		SERIOUS NO NORTH TASKS BEFORE BS
 		--]]
-
-
 
 
 		local faction_lookup = {}
@@ -166,7 +107,7 @@ xr_effects.on_init_delivery_task = function(actor,npc,p)
 					if squad and (squad:commander_id() == se_obj.id) and sfind(squad:section_name(),"sim_squad") and (squad.current_action == 1) then
 						-- Search in far/nearby locations. Exclude same level, blacklisted areas and undergrounds
 						local lvl_name = sim:level_name( gg:vertex(se_obj.m_game_vertex_id):level_id())
-						if (not blacklisted_maps[lvl_name]) and (not simulation_objects.is_on_the_same_level(sim:actor(), se_obj)) then
+						if (not blacklisted_maps[lvl_name] and not preScorcherBlacklist[lvl_name]) and (not simulation_objects.is_on_the_same_level(sim:actor(), se_obj)) then
 							if far_location and (not simulation_objects.is_on_the_linked_level(sim:actor(), se_obj)) then 
 								targets[#targets + 1] = i
 							elseif (not far_location) then
