@@ -131,6 +131,26 @@ function get_rnd_level(start_point)
 	end
 end
 
+--[[
+	SERIOUS NO NORTH TASKS BEFORE BS
+--]]
+function get_rnd_level_south(start_point, mapPool)
+	local rnd = math.random(table.size(mapPool))
+	local a = 0
+	for i, name in pairs(mapPool) do
+		a = a + 1
+		if a == rnd then
+			if not (i == start_point) then
+				return i
+			end
+			return get_rnd_level_south(start_point, mapPool)
+		end
+	end
+end
+--[[
+	SERIOUS NO NORTH TASKS BEFORE BS
+--]]
+
 -- Find the road (count the number of locations on the way)
 -- Gathers all possible paths from A to B
 function collector_ways(start, finish, curr_level)

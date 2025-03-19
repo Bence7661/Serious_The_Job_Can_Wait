@@ -425,6 +425,11 @@ xr_conditions.validate_assault_task = function(actor, npc, p)
 	SERIOUS NO NORTH TASKS BEFORE BS
 --]]
 	local preScorcherBlacklist = {}
+	local mcm_scanMode = blacklist_helper.GetMcmDropdownValue()
+
+	if mcm_scanMode > 0  then
+		def.scan = mcm_scanMode
+	end
 
 	if blacklist_helper.ShouldBlacklistNorth() then
 		preScorcherBlacklist = blacklist_helper.CreatePreScorcherBlacklist(blacklisted_maps)

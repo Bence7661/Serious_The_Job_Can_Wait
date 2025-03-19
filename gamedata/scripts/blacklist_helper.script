@@ -1,3 +1,5 @@
+local thejobcanwait_mcm_conf = serious_the_job_can_wait_mcm.get_config
+
 local northernMaps = {
 	["l10_limansk"] = true,
     ["l10_red_forest"] = true,
@@ -69,4 +71,8 @@ end
 
 function GetGuideDestinationsNorth()
     return guide_before_north
+end
+
+function GetMcmDropdownValue()
+    return tonumber(thejobcanwait_mcm_conf("scan_mode_override"))
 end
