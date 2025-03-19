@@ -1,5 +1,6 @@
 --** Autor - SadBlackFox
-
+-- fixed by RavenAscendant
+-- G.A.M.M.A. Story patch by Serious 
 --==================================================< Variables and Tables >==================================================--
 local stdzarplata = 1000
 local guid = {}
@@ -130,27 +131,6 @@ function get_rnd_level(start_point)
 	end
 end
 
---[[
-	SERIOUS NO NORTH TASKS BEFORE BS
---]]
-function get_rnd_level_south(start_point, mapPool)
-	local rnd = math.random(table.size(mapPool))
-	local a = 0
-	for i, name in pairs(mapPool) do
-		a = a + 1
-		if a == rnd then
-			if not (i == start_point) then
-				return i
-			end
-			return get_rnd_level_south(start_point)
-		end
-	end
-end
---[[
-	SERIOUS NO NORTH TASKS BEFORE BS
---]]
-
-
 -- Find the road (count the number of locations on the way)
 -- Gathers all possible paths from A to B
 function collector_ways(start, finish, curr_level)
@@ -193,12 +173,12 @@ function go_poisk()
 	if tbl_ignore_Locations[start_point] or not level_weathers.valid_levels[start_point] then
 		return
 	end
-
+	
 --[[
 	SERIOUS NO NORTH TASKS BEFORE BS
 --]]
 	local finish_point = ""
-	
+		
 	if blacklist_helper.ShouldBlacklistNorth() then
 		local preScorcherValidList = blacklist_helper.GetGuideDestinationsNorth()
 		finish_point = get_rnd_level_south(start_point, preScorcherValidList)
@@ -206,9 +186,9 @@ function go_poisk()
 		finish_point = get_rnd_level(start_point)
 	end
 --[[
-	SERIOUS NO NORTH TASKS BEFORE BS
+SERIOUS NO NORTH TASKS BEFORE BS
 --]]
-		
+	
 	if start_point == finish_point then
 		return finish_point, 1
 	end
@@ -230,8 +210,6 @@ end
 function load_state()
 	guid = l_v("guid", {})
 	curr_guid = l_v("curr_guid", {})
-	local newgame = l_v("newgame")	-- �� ��� ��� ������� ������������ ��� ��
-	if not newgame then s_v("newgame", '������� ��������') return g_start_timer('guid_msg',0,0,15,'tasks_guide','prepare_follower') end
 end 
 function save_state()
 	s_v("guid", guid)
@@ -269,6 +247,12 @@ function actor_on_update()
 	end
 end
 function actor_on_first_update()
+	local time=tonumber(game.get_game_time():diffSec(level.get_start_time()))/60
+	local g_timers_tbl = l_v('g_timers_tbl',nil)
+	if not g_timers_tbl or g_timers_tbl.guid_msg and ( g_timers_tbl.guid_msg.delay - time  > 1400)   then
+		g_start_timer('guid_msg',0,0,15,'tasks_guide','prepare_follower')
+	end
+
 	if (not IsTestMode()) then
 		RegisterScriptCallback("actor_on_update",actor_on_update)
 	end
@@ -380,7 +364,7 @@ function prepare_follower()
 	news_manager.send_tip(db.actor, str, nil, npc, 15000)
 	return
 	-- We start the timer for the next call of this function
-	g_start_timer('guid_msg',0,math.random(6),0,'tasks_guide','prepare_follower')
+	g_start_timer('guid_msg',0,math.random(1,6),0,'tasks_guide','prepare_follower')
 end
 
 function activate()
@@ -542,7 +526,7 @@ function g_start_timer(name,delay_d,delay_h,delay_m,name_script,name_func,param)
 	if action==nil then
 		action=""
 	end
-	local time=level.get_time_days()*60*24+level.get_time_hours()*60+level.get_time_minutes()  --time in game minutes
+	local  time=tonumber(game.get_game_time():diffSec(level.get_start_time()))/60  --time in game minutes
 	
 	local g_timers_tbl = l_v('g_timers_tbl',nil)
 	if g_timers_tbl == nil then
@@ -550,6 +534,8 @@ function g_start_timer(name,delay_d,delay_h,delay_m,name_script,name_func,param)
 	end
 	if g_timers_tbl[name] == nil then
 		g_timers_tbl[name] = {}
+	else
+	printf("RAX WTF timer over write!")
 	end
 	g_timers_tbl[name] = {name = name, delay = time+delay_d*60*24+delay_h*60+delay_m, action = {name_script = name_script, name_func = name_func, param = param}}
 	s_v('g_timers_tbl', g_timers_tbl)
@@ -563,6 +549,19 @@ function has_timer(name)
     end
 	return false
 end
+
+function print_timer()
+	local g_timers_tbl = l_v('g_timers_tbl',nil)
+	if g_timers_tbl~=nil and table.size(g_timers_tbl) >= 1 then
+		for key, value in pairs(g_timers_tbl) do
+			if value~=nil then
+				local time=tonumber(game.get_game_time():diffSec(level.get_start_time()))/60  --time in game minutes
+				printf("Timer %s, at %s | gametime at %s", value['name'], value['delay'],time) 
+			end
+		end
+	end
+end
+
 -- check whether the game timer has been started
 function has_g_timer(name)
 	local g_timers_tbl = l_v('g_timers_tbl',nil)
@@ -571,7 +570,7 @@ function has_g_timer(name)
     end
 	return false
 end
--- stop the timer
+-- stop the timer tasks_guide.has_g_timer("guid_msg")  tasks_guide.print_timer()
 function stop_timer(name)
 	if has_timer(name)==true then
 		local timers_tbl = l_v('timers_tbl',nil)
@@ -605,7 +604,7 @@ function check_timers()
 	if g_timers_tbl~=nil and table.size(g_timers_tbl) >= 1 then
 		for key, value in pairs(g_timers_tbl) do
 			if value~=nil then
-				local time=level.get_time_days()*60*24+level.get_time_hours()*60+level.get_time_minutes()  --time in game minutes
+				local time=tonumber(game.get_game_time():diffSec(level.get_start_time()))/60  --time in game minutes
 				if value['delay'] <= time then
 					stop_g_timer(value['name'])
 					__do_timer_action(value['name'],value['action'])
@@ -697,76 +696,3 @@ function is_not_enemy(actor,npc)
 	end
 	return not (npc:relation(db.actor) == game_object.enemy)
 end
---[[
-function squad_switcher(npc_id,func,param2,param3)
-	local flag_off_on
-	local snpc = alife_object(npc_id)
-	local squad = get_object_squad(snpc)
-	if not squad then return log('����� �� ���������� ��� ̨���!!!') end
-	if not squad.online then
-		alife():set_switch_offline (squad.id, false)
-		alife():set_switch_online (squad.id, true) -- ������� ������ (������ ��������� ����� ��� ������)
-		flag_off_on = "OFF"
-		log('�������������: '..flag_off_on)
-	else
-		flag_off_on = "ON"
-		log('�������������: '..flag_off_on)
-	end
-	local wait_online = function()
-							if squad.online then
-								return true
-							end
-						end 
-	local do_online = 	function()
-							log('����� � �������')
-							--------
-							-- �������� � ������ ��������
-							log('check flag= '..flag_off_on)
-							func(npc_id,param2,param3)
-							--------
-							if flag_off_on == "OFF" then
-								alife():set_switch_offline (squad.id, true) -- ������� � �������
-								alife():set_switch_online (squad.id, true)
-								log('���������� � �������')
-							else
-								log('����������� � ������� �� ���������')
-							end
-						end
-	level.add_call( wait_online, do_online )
-end
-
-function npc_switcher(npc_id,func,param2,param3)
-	local flag_off_on
-	local snpc = alife_object(npc_id)
-	if not snpc:alive() then return log('��� �� ���������� ��� ̨���!!!') end
-	if not snpc.online then
-		snpc:switch_online() -- ������� ������ (������ ��������� ����� ��� ������)
-		flag_off_on = "OFF"
-		log('�������������: '..flag_off_on)
-	else
-		flag_off_on = "ON"
-		log('�������������: '..flag_off_on)
-	end
-	local wait_online = function()
-							if snpc.online then
-								return true
-							end
-						end 
-	local do_online = 	function()
-							log('��� � �������')
-							--------
-							-- �������� � ������ ��������
-							log('check flag= '..flag_off_on)
-							func(npc_id,param2,param3)
-							--------
-							if flag_off_on == "OFF" then
-								snpc:switch_offline() -- ������� � �������
-								log('���������� � �������')
-							else
-								log('����������� � ������� �� ���������')
-							end
-						end
-	level.add_call( wait_online, do_online )
-end
-]]
-
