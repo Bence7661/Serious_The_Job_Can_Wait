@@ -1,5 +1,6 @@
 --** Autor - SadBlackFox
 -- fixed by RavenAscendant
+-- G.A.M.M.A. Story patch by Serious
 --==================================================< Variables and Tables >==================================================--
 local stdzarplata = 1000
 local guid = {}
