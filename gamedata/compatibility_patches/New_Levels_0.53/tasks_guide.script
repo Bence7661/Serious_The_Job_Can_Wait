@@ -1,6 +1,5 @@
 --** Autor - SadBlackFox
 -- fixed by RavenAscendant
--- G.A.M.M.A. Story patch by Serious 
 --==================================================< Variables and Tables >==================================================--
 local stdzarplata = 1000
 local guid = {}
@@ -11,7 +10,7 @@ local ignore_tbl	= {}
 local point_tbl		= {}
 local ret_way		= {}
 local cycle_id		= 0
-local tbl_way = { 
+tbl_way = { 
 	l01_escape			= {"k00_marsh",		"k01_darkscape",	"l02_garbage"},
 	k00_marsh			= {"l01_escape",	'l03_agroprom'},
 	k01_darkscape		= {"l01_escape",	"l04_darkvalley"},
@@ -22,8 +21,8 @@ local tbl_way = {
 	l06_rostok			= {"l08_yantar",	"l05_bar",			'l02_garbage'},
 	l08_yantar			= {"l06_rostok",	"l09_deadcity",		'l03_agroprom'},
 	l09_deadcity		= {"l08_yantar",	'l07_military',		'l10_limansk'},
-	k02_trucks_cemetery	= {'l04_darkvalley','l05_bar',			'l07_military'},
-	l07_military		= {"l05_bar",		"l09_deadcity",		'k02_trucks_cemetery',	'l10_red_forest'}, --, 'l10_radar'},
+	k02_trucks_cemetery	= {'l04_darkvalley','l05_bar',			'promzona'},
+	l07_military		= {"l05_bar",		"l09_deadcity",		'promzona',	'l10_red_forest'}, --, 'l10_radar'},
 	--l10_radar			= {"l07_military",	"l11_pripyat",		'l10_red_forest'},
 	l10_red_forest		= {'l07_military',	'l10_limansk',		'jupiter'}, --'l10_radar'},
 	l10_limansk			= {'l09_deadcity',	'l10_red_forest'},
@@ -31,7 +30,10 @@ local tbl_way = {
 	--l11_pripyat			= {"l10_radar",		'jupiter',			'pripyat'},
 	--pripyat				= {'l11_pripyat'},
 	zaton				= {'jupiter'},
-    y04_pole			= {"l01_escape",	'l04_darkvalley'}
+    y04_pole			= {"l01_escape",	'l04_darkvalley'},
+	promzona			= {"l07_military", "k02_trucks_cemetery"},
+	grimwood			= {"l07_military", "l10_red_forest"},
+	poselok_ug		= {"l02_garbage", "l04_darkvalley", "k02_trucks_cemetery", "l07_military"},
 }
 
 --[[
@@ -88,7 +90,9 @@ local tbl_ignore_Locations = {
 	l12_stancia				= true,
 	l12_stancia_2			= true,
 	l12u_sarcofag			= true,
-	l13_generators			= true
+	l13_generators			= true,
+	collaider					= true,
+	bunker_a1				= true,
 }
 local ignore_factions = {
 	["zombied"] = true,
@@ -156,8 +160,8 @@ end
 function collector_ways(start, finish, curr_level)
 	cycle_id = cycle_id + 1
 	if cycle_id == 5000 then
-		log('! Cracnricl oceer, audieili = '..cycle_id..' drc!')	
-		return --abort('Cracnricl oceer, audieili = '..cycle_id..' drc!')
+		log('! ��������� �����, �������� = '..cycle_id..' ���!')	
+		return --abort('��������� �����, �������� = '..cycle_id..' ���!')
 	end
 	if curr_level == nil then curr_level = start end
 	point_tbl[#point_tbl + 1] = curr_level
@@ -193,12 +197,12 @@ function go_poisk()
 	if tbl_ignore_Locations[start_point] or not level_weathers.valid_levels[start_point] then
 		return
 	end
-	
+
 --[[
-	SERIOUS NO NORTH TASKS BEFORE BS
+SERIOUS NO NORTH TASKS BEFORE BS
 --]]
 	local finish_point = ""
-		
+			
 	if blacklist_helper.ShouldBlacklistNorth() then
 		local preScorcherValidList = blacklist_helper.GetGuideDestinationsNorth()
 		finish_point = get_rnd_level_south(start_point, preScorcherValidList)
@@ -208,7 +212,7 @@ function go_poisk()
 --[[
 SERIOUS NO NORTH TASKS BEFORE BS
 --]]
-	
+
 	if start_point == finish_point then
 		return finish_point, 1
 	end
