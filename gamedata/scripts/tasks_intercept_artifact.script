@@ -131,11 +131,8 @@ xr_conditions.intercept_artifact_check = function(actor,npc,p)
     if not target_rolled[task_id] then
         local art_tier = tonumber(p[2])
 
-        FileLogger.log("iTheon")
         if blacklist_helper.ShouldBlacklistNorth() then
             scanned_maps = "southern_maps"
-        else
-            scanned_maps = "northern_maps"
         end
 
         local scanned_maps = p[3]
