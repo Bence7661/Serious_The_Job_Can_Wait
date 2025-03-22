@@ -76,3 +76,17 @@ end
 function GetMcmDropdownValue()
     return tonumber(thejobcanwait_mcm_conf("scan_mode_override"))
 end
+
+xr_conditions.serious_no_step_back_precond = function(actor, npc, p)
+    local task_id = p[1]
+
+    if ShouldBlacklistNorth() then
+        return false
+    end
+    
+    if not has_alife_info(task_id .. '_completed') then
+        return true
+    else
+        return nta_utils.mcm_config["repl_" .. task_id]
+    end
+end
