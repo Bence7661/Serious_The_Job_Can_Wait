@@ -41,6 +41,12 @@ local guide_before_north = {
     y04_pole			= {"l01_escape",	'l04_darkvalley'}
 }
 
+local fate_map_blacklist = {
+    ["zaton"] = true,
+    ["jupiter"] = true,
+    ["pripyat"] = true
+}
+
 function ShouldBlacklistNorth()
 	local playerFaction = get_actor_true_community()
 
@@ -71,6 +77,10 @@ end
 
 function GetGuideDestinationsNorth()
     return guide_before_north
+end
+
+function GetFateBlacklist()
+    return fate_map_blacklist
 end
 
 function GetMcmDropdownValue()
