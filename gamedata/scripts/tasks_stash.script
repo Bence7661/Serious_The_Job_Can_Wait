@@ -79,7 +79,6 @@ xr_effects.drx_sl_create_quest_stash = function( actor, npc, p )
 		end
 		
 		if rerollStash and stashRerollCount < 50 then --If with 50 rerolls we still get limansk then...
-			FileLogger.log("Rerolling because map: %s reroll count: %s", level_target, stashRerollCount)
 			cache_stash[p[1]] = nil
 			stashRerollCount = stashRerollCount + 1
 			RollStash()
