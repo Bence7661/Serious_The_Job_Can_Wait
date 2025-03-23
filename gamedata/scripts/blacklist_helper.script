@@ -87,10 +87,6 @@ function GetNorthernMaps()
     return northernMaps
 end
 
-function GetMcmDropdownValue()
-    return tonumber(thejobcanwait_mcm_conf("scan_mode_override"))
-end
-
 xr_conditions.serious_no_step_back_precond = function(actor, npc, p)
     local task_id = p[1]
 
@@ -103,4 +99,8 @@ xr_conditions.serious_no_step_back_precond = function(actor, npc, p)
     else
         return nta_utils.mcm_config["repl_" .. task_id]
     end
+end
+
+function GetMcmDropdownValue()
+    return tonumber(thejobcanwait_mcm_conf("scan_mode_override"))
 end
