@@ -83,6 +83,10 @@ function GetFateBlacklist()
     return fate_map_blacklist
 end
 
+function GetNorthernMaps()
+    return northernMaps
+end
+
 function GetMcmDropdownValue()
     return tonumber(thejobcanwait_mcm_conf("scan_mode_override"))
 end
