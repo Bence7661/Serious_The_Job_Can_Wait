@@ -132,7 +132,6 @@ xr_effects.on_init_fate_task = function(actor,npc,p)
         end
     end
 
-
 	local map = p[math.random(4,#p)]
 --[[
 	SERIOUS NO NORTH TASKS BEFORE BS
