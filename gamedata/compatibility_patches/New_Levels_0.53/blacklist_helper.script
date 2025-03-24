@@ -53,9 +53,9 @@ local fate_map_blacklist = {
 function ShouldBlacklistNorth()
 	local playerFaction = get_actor_true_community()
 
-	if 
+	if
 		(has_alife_info("yan_labx16_switcher_primary_off") and has_alife_info("bar_deactivate_radar_done")) 
-		or 
+		or
 		(psy_immune_factions[playerFaction] or has_alife_info("story_mode_disabled"))
 	then
 		return false
@@ -86,8 +86,8 @@ function GetFateBlacklist()
     return fate_map_blacklist
 end
 
-function GetGuideDestinationsNorth()
-    return guide_before_north
+function GetNorthernMaps()
+    return northernMaps
 end
 
 xr_conditions.serious_no_step_back_precond = function(actor, npc, p)
