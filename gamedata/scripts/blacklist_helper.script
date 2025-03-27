@@ -18,6 +18,22 @@ local northernMaps = {
     ["l13u_warlab"] = true,
 }
 
+local southern_maps = {
+    "k00_marsh",
+	"k01_darkscape",
+	"k02_trucks_cemetery",
+	"l01_escape",
+	"l02_garbage",
+	"l03_agroprom",
+	"l04_darkvalley",
+	"l06_rostok",
+	"l07_military",
+	"l08_yantar",
+	"l09_deadcity",
+    "y04_pole",
+    "l05_bar",
+}
+
 local psy_immune_factions = {
 	["monolith"] = true,
 	["isg"] = true,
@@ -87,6 +103,10 @@ function GetNorthernMaps()
     return northernMaps
 end
 
+function GetSouthernMaps()
+    return southern_maps
+end
+
 xr_conditions.serious_no_step_back_precond = function(actor, npc, p)
     local task_id = p[1]
 
@@ -103,4 +123,34 @@ end
 
 function GetMcmDropdownValue()
     return tonumber(thejobcanwait_mcm_conf("scan_mode_override"))
+end
+
+--Compatibility helpers
+function AppendToGuideBeforeNorth(poolExtension)
+    for key, value in pairs(poolExtension) do
+        guide_before_north[key] = value
+    end
+end
+
+function AppendToSouthernMaps(poolExtension)
+    for _, value in pairs(poolExtension) do
+        southern_maps[#southern_maps] = value
+    end
+end
+
+function AppendToNorthernnMaps(poolExtension)
+    for _, value in pairs(poolExtension) do
+        northernMaps[#northernMaps] = value
+    end
+end
+
+-- To run compatibility patches
+function on_game_start()
+    serious_new_levels_comp_patch()
+end
+
+--[[
+    This is intentionally empty. I'll monkey patch this method when I need to add maps. This way I can avoid having to maintain 2 or more versions of this file
+--]]
+function serious_new_levels_comp_patch()
 end

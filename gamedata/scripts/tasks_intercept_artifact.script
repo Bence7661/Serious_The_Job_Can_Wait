@@ -130,12 +130,13 @@ xr_conditions.intercept_artifact_check = function(actor,npc,p)
     local task_id = p[1]
     if not target_rolled[task_id] then
         local art_tier = tonumber(p[2])
+        
+        local scanned_maps = p[3]
 
         if blacklist_helper.ShouldBlacklistNorth() then
             scanned_maps = "southern_maps"
         end
 
-        local scanned_maps = p[3]
         local targeted_factions = collect_targeted_factons(p)
 
         target[task_id] = nta_utils.find_random_stalker(targeted_factions, nta_utils[scanned_maps])
