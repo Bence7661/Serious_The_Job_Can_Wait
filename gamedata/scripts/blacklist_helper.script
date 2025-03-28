@@ -19,19 +19,19 @@ local northernMaps = {
 }
 
 local southern_maps = {
-    "k00_marsh",
-	"k01_darkscape",
-	"k02_trucks_cemetery",
-	"l01_escape",
-	"l02_garbage",
-	"l03_agroprom",
-	"l04_darkvalley",
-	"l06_rostok",
-	"l07_military",
-	"l08_yantar",
-	"l09_deadcity",
-    "y04_pole",
-    "l05_bar",
+    ["k00_marsh"] = true,
+	["k01_darkscape"] = true,
+	["k02_trucks_cemetery"] = true,
+	["l01_escape"] = true,
+	["l02_garbage"] = true,
+	["l03_agroprom"] = true,
+	["l04_darkvalley"] = true,
+	["l06_rostok"] = true,
+	["l07_military"] = true,
+	["l08_yantar"] = true,
+	["l09_deadcity"] = true,
+    ["y04_pole"] = true,
+    ["l05_bar"] = true,
 }
 
 local psy_immune_factions = {
